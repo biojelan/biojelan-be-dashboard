@@ -16,7 +16,7 @@ class AgenSeeder extends Seeder
         $this->call(UserSeeder::class);
 
         $agenUser = User::query()
-            ->where('email', 'agen@mail.com')
+            ->where('email', 'agent@mail.com')
             ->where('role_id', User::AGEN_ROLE_ID)
             ->firstOrFail();
 

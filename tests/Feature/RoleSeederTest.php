@@ -14,8 +14,8 @@ test('database seeding creates the seven roles with their assigned ids', functio
     $this->assertDatabaseHas('role', ['id' => 3, 'role' => 'manajer_finance']);
     $this->assertDatabaseHas('role', ['id' => 4, 'role' => 'manajer_operasional']);
     $this->assertDatabaseHas('role', ['id' => 5, 'role' => 'driver']);
-    $this->assertDatabaseHas('role', ['id' => 6, 'role' => 'agen']);
-    $this->assertDatabaseHas('role', ['id' => 7, 'role' => 'klien']);
+    $this->assertDatabaseHas('role', ['id' => 6, 'role' => 'agent']);
+    $this->assertDatabaseHas('role', ['id' => 7, 'role' => 'client']);
 });
 
 test('role seeding can be repeated without duplicating records', function () {
