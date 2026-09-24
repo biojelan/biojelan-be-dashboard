@@ -16,7 +16,7 @@ class UpdateUserRequest extends ApiRequest
         return [
             'name' => ['sometimes', 'string', 'max:255'],
             'email' => ['sometimes', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($this->user()?->id)],
-            'phone' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'phone' => ['sometimes', 'nullable', 'string', 'max:255', Rule::unique('users', 'phone')->ignore($this->user()?->id)],
             'password' => ['prohibited'],
             'agen' => ['sometimes', 'array'],
             'agen.address' => ['sometimes', 'string', 'max:255'],
@@ -37,6 +37,7 @@ class UpdateUserRequest extends ApiRequest
     {
         return [
             'email.unique' => 'Email already exists.',
+            'phone.unique' => 'Phone already exists.',
             'password.prohibited' => 'The password field is prohibited.',
         ];
     }

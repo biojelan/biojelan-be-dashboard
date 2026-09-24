@@ -41,6 +41,8 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
     public const int AGEN_ROLE_ID = 6;
 
+    public const int CLIENT_ROLE_ID = 7;
+
     /** @use HasFactory<UserFactory> */
     use HasApiTokens, HasFactory, Notifiable, PasskeyAuthenticatable, TwoFactorAuthenticatable;
 

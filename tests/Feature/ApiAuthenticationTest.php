@@ -172,7 +172,7 @@ test('kilang login allows only the four dashboard roles', function (int $roleId,
     $this->assertDatabaseCount('personal_access_tokens', $allowed ? 1 : 0);
 })->with([
     'superadmin' => [1, true], 'admin' => [2, true], 'finance' => [3, true],
-    'operasional' => [4, true], 'driver' => [5, false], 'agen' => [6, false], 'klien' => [7, false],
+    'operasional' => [4, true], 'driver' => [5, false], 'agen' => [6, false], 'client' => [7, false],
 ]);
 
 test('logout revokes only the current token and rejects reuse', function () {

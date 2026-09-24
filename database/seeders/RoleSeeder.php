@@ -18,8 +18,8 @@ class RoleSeeder extends Seeder
             3 => 'manajer_finance',
             4 => 'manajer_operasional',
             5 => 'driver',
-            6 => 'agen',
-            7 => 'klien',
+            6 => 'agent',
+            7 => 'client',
         ];
 
         foreach ($roles as $id => $role) {
