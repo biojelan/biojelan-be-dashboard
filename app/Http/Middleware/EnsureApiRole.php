@@ -18,6 +18,7 @@ class EnsureApiRole
     {
         $user = $request->user();
         $roleId = match ($role) {
+            'driver' => User::DRIVER_ROLE_ID,
             'agent' => User::AGEN_ROLE_ID,
             'client' => User::CLIENT_ROLE_ID,
             default => null,
