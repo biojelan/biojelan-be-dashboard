@@ -7,6 +7,7 @@ use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -28,6 +29,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property bool $is_verified
  * @property bool $is_active
  * @property-read Agen|null $agen
+ * @property-read Driver|null $driver
  * @property string|null $two_factor_secret
  * @property string|null $two_factor_recovery_codes
  * @property Carbon|null $two_factor_confirmed_at
@@ -39,6 +41,8 @@ use Laravel\Sanctum\HasApiTokens;
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
+    public const int DRIVER_ROLE_ID = 5;
+
     public const int AGEN_ROLE_ID = 6;
 
     public const int CLIENT_ROLE_ID = 7;
@@ -54,6 +58,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
                     'role_id' => 'Hapus profil agen sebelum mengubah role pengguna.',
                 ]);
             }
+
+            if ($user->isDirty('role_id') && $user->role_id !== self::DRIVER_ROLE_ID && $user->driver()->exists()) {
+                throw ValidationException::withMessages([
+                    'role_id' => 'Hapus profil driver sebelum mengubah role pengguna.',
+                ]);
+            }
         });
     }
 
@@ -61,6 +71,24 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function agen(): HasOne
     {
         return $this->hasOne(Agen::class, 'agen_id');
+    }
+
+    /** @return HasOne<Driver, $this> */
+    public function driver(): HasOne
+    {
+        return $this->hasOne(Driver::class, 'driver_id');
+    }
+
+    /** @return HasMany<TransactionAgent, $this> */
+    public function driverTransactions(): HasMany
+    {
+        return $this->hasMany(TransactionAgent::class, 'driver_id');
+    }
+
+    /** @return HasMany<TransactionAgent, $this> */
+    public function agentTransactions(): HasMany
+    {
+        return $this->hasMany(TransactionAgent::class, 'agent_id');
     }
 
     /**

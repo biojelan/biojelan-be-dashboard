@@ -33,6 +33,12 @@ class Price extends Model
         return $this->hasMany(TransactionClient::class, 'price_id', 'price_id');
     }
 
+    /** @return HasMany<TransactionAgent, $this> */
+    public function agentTransactions(): HasMany
+    {
+        return $this->hasMany(TransactionAgent::class, 'price_id', 'price_id');
+    }
+
     /** @return array<string, string> */
     protected function casts(): array
     {
