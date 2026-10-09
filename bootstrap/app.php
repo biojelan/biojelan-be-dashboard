@@ -34,6 +34,7 @@ return Application::configure(basePath: dirname(__DIR__))
                     'api.user.show' => 'Failed get user! User unauthorized.',
                     'api.user.update' => 'Failed update user! User unauthorized.',
                     'api.user.destroy' => 'Failed delete user! User unauthorized.',
+                    'api.user.factory' => 'Failed get kilang! User unauthorized.',
                     default => 'User unauthorized.',
                 };
 

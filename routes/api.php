@@ -30,6 +30,8 @@ Route::middleware(['auth:sanctum', EnsureApiTokenIsValid::class])->name('api.')-
     Route::get('/user', [UserController::class, 'show'])->name('user.show');
     Route::patch('/user', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::get('/user/factory', [UserController::class, 'factory'])
+        ->middleware(EnsureApiRole::class.':agent,driver,admin,superadmin')->name('user.factory');
 
     Route::prefix('agent')->middleware(EnsureApiRole::class.':agent')->name('agent.')->group(function (): void {
         Route::post('/transaction', [AgentClientTransactionController::class, 'store'])->name('transaction.store');

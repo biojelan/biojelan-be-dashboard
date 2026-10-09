@@ -50,6 +50,20 @@ class UserFactory extends Factory
         ]);
     }
 
+    public function admin(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'role_id' => User::ADMIN_ROLE_ID,
+        ]);
+    }
+
+    public function client(): static
+    {
+        return $this->state(fn (array $attributes): array => [
+            'role_id' => User::CLIENT_ROLE_ID,
+        ]);
+    }
+
     /**
      * Indicate that the model's email address should be unverified.
      */

@@ -17,7 +17,9 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(AgenSeeder::class);
         $this->call(DriverSeeder::class);
+        $this->call(AdminSeeder::class);
         $this->call(PriceSeeder::class);
+        $this->call(PickupSeeder::class);
 
         // User::factory(10)->create();
 

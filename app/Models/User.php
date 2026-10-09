@@ -28,6 +28,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property string|null $phone
  * @property bool $is_verified
  * @property bool $is_active
+ * @property-read Admin|null $admin
  * @property-read Agen|null $agen
  * @property-read Driver|null $driver
  * @property string|null $two_factor_secret
@@ -41,6 +42,10 @@ use Laravel\Sanctum\HasApiTokens;
 #[Hidden(['password', 'two_factor_secret', 'two_factor_recovery_codes', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 {
+    public const int SUPERADMIN_ROLE_ID = 1;
+
+    public const int ADMIN_ROLE_ID = 2;
+
     public const int DRIVER_ROLE_ID = 5;
 
     public const int AGEN_ROLE_ID = 6;
@@ -64,6 +69,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
                     'role_id' => 'Hapus profil driver sebelum mengubah role pengguna.',
                 ]);
             }
+
+            if ($user->isDirty('role_id') && $user->role_id !== self::ADMIN_ROLE_ID && $user->admin()->exists()) {
+                throw ValidationException::withMessages([
+                    'role_id' => 'Hapus profil admin sebelum mengubah role pengguna.',
+                ]);
+            }
         });
     }
 
@@ -77,6 +88,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
     public function driver(): HasOne
     {
         return $this->hasOne(Driver::class, 'driver_id');
+    }
+
+    /** @return HasOne<Admin, $this> */
+    public function admin(): HasOne
+    {
+        return $this->hasOne(Admin::class, 'admin_id');
     }
 
     /** @return HasMany<TransactionAgent, $this> */

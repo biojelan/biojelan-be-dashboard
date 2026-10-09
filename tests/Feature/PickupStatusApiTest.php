@@ -1,5 +1,7 @@
 <?php
 
+use App\Models\Agen;
+use App\Models\Driver;
 use App\Models\Pickup;
 use App\Models\TransactionAgent;
 use App\Models\User;
@@ -49,8 +51,25 @@ test('drivers cannot update another drivers pickup status', function () {
 
 test('agents and drivers get only their latest active pickup status', function () {
     $this->seed(RoleSeeder::class);
-    $driver = User::factory()->driver()->create();
-    $agent = User::factory()->agen()->create();
+    $driver = User::factory()->driver()->create([
+        'name' => 'John Doe',
+        'phone' => '+628123456789',
+    ]);
+    Driver::factory()->create([
+        'driver_id' => $driver->id,
+        'plate_number' => 'B 1234 XYZ',
+        'type_vehicle' => 'Carry Pickup',
+    ]);
+    $agent = User::factory()->agen()->create([
+        'name' => 'Jane Smith',
+        'phone' => '+628987654321',
+    ]);
+    Agen::factory()->create([
+        'agen_id' => $agent->id,
+        'address' => 'Jl. Contoh No. 2, Bandar Lampung',
+        'latitude' => '-5.3971000',
+        'longitude' => '105.2668000',
+    ]);
     $completedTransaction = TransactionAgent::factory()->create([
         'driver_id' => $driver->id,
         'agent_id' => $agent->id,
@@ -73,13 +92,24 @@ test('agents and drivers get only their latest active pickup status', function (
     $this->withToken($driverToken)->getJson('/api/driver/pickup/status')
         ->assertOk()
         ->assertJsonPath('data.pickup_id', sprintf('pkp-%03d', $activePickup->pickup_id))
-        ->assertJsonPath('data.status', PickupStatus::Otw->value);
+        ->assertJsonPath('data.status', PickupStatus::Otw->value)
+        ->assertJsonPath('data.agent.agent_id', $agent->id)
+        ->assertJsonPath('data.agent.name', 'Jane Smith')
+        ->assertJsonPath('data.agent.phone', '+628987654321')
+        ->assertJsonPath('data.agent.address', 'Jl. Contoh No. 2, Bandar Lampung')
+        ->assertJsonPath('data.agent.latitude', -5.3971)
+        ->assertJsonPath('data.agent.longitude', 105.2668);
 
     $this->app->make('auth')->forgetGuards();
 
     $this->withToken($agentToken)->getJson('/api/agent/pickup/status')
         ->assertOk()
         ->assertJsonPath('data.pickup_id', sprintf('pkp-%03d', $activePickup->pickup_id))
+        ->assertJsonPath('data.driver.driver_id', $driver->id)
+        ->assertJsonPath('data.driver.name', 'John Doe')
+        ->assertJsonPath('data.driver.phone', '+628123456789')
+        ->assertJsonPath('data.driver.plate_number', 'B 1234 XYZ')
+        ->assertJsonPath('data.driver.type_vehicle', 'Carry Pickup')
         ->assertJsonPath('message', 'Success get pickup status!');
 });
 
