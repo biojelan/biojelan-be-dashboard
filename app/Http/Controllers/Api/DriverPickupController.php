@@ -19,6 +19,7 @@ class DriverPickupController extends Controller
         /** @var User $driver */
         $driver = $request->user();
         $pickup = Pickup::query()
+            ->with('agent.agen')
             ->where('driver_id', $driver->id)
             ->whereNotIn('status', [PickupStatus::Completed, PickupStatus::Cancelled])
             ->latest('pickup_id')

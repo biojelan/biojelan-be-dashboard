@@ -4,9 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\UpdateUserRequest;
+use App\Http\Resources\FactoryLocationResource;
 use App\Http\Resources\PublicAgenResource;
 use App\Http\Resources\UserResource;
 use App\Models\Agen;
+use App\Models\Factory;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -78,6 +80,22 @@ class UserController extends Controller
 
         return PublicAgenResource::collection($agen)
             ->additional(['message' => 'Success get user agen!'])
+            ->response();
+    }
+
+    public function factory(): JsonResponse
+    {
+        $factory = Factory::query()->oldest('factory_id')->first();
+
+        if ($factory === null) {
+            return response()->json([
+                'data' => (object) [],
+                'message' => 'Failed get kilang! Factory not found.',
+            ], 404);
+        }
+
+        return (new FactoryLocationResource($factory))
+            ->additional(['message' => 'Success get kilang!'])
             ->response();
     }
 }
