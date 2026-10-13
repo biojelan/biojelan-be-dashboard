@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
         $this->call(AdminSeeder::class);
         $this->call(PriceSeeder::class);
         $this->call(PickupSeeder::class);
+        $this->call(KilangSeeder::class);
 
         // User::factory(10)->create();
 

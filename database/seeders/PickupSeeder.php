@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\ClientTransactionStatus;
+use App\Models\Factory;
 use App\Models\Pickup;
 use App\Models\Price;
 use App\Models\TransactionAgent;
@@ -58,8 +59,13 @@ class PickupSeeder extends Seeder
                     'time' => $example['time'],
                     'status' => $example['status'],
                     'destination' => $example['destination'],
+                    'factory_id' => Factory::query()->oldest('factory_id')->value('factory_id'),
+                    'completed_at' => $example['status'] === PickupStatus::Completed ? now() : null,
                 ],
             );
+            if ($transaction->transaction_id === null) {
+                $transaction->forceFill(['transaction_id' => sprintf('trx-agent-%03d', $transaction->id)])->saveQuietly();
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\AgentApplicationController;
 use App\Http\Controllers\Api\AgentClientTransactionController;
 use App\Http\Controllers\Api\AgentDriverTransactionController;
 use App\Http\Controllers\Api\AgentPickupController;
@@ -30,6 +31,9 @@ Route::middleware(['auth:sanctum', EnsureApiTokenIsValid::class])->name('api.')-
     Route::get('/user', [UserController::class, 'show'])->name('user.show');
     Route::patch('/user', [UserController::class, 'update'])->name('user.update');
     Route::delete('/user', [UserController::class, 'destroy'])->name('user.destroy');
+    Route::post('/user/agent-request', [AgentApplicationController::class, 'store'])
+        ->middleware(EnsureApiRole::class.':client')->name('user.agent-request.store');
+    Route::get('/user/agent-request', [AgentApplicationController::class, 'show'])->name('user.agent-request.show');
     Route::get('/user/factory', [UserController::class, 'factory'])
         ->middleware(EnsureApiRole::class.':agent,driver,admin,superadmin')->name('user.factory');
 

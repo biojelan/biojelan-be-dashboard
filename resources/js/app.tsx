@@ -3,10 +3,16 @@ import { Toaster } from '@/components/ui/sonner';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { initializeTheme } from '@/hooks/use-appearance';
 import AppLayout from '@/layouts/app-layout';
+import KilangLayout from '@/layouts/kilang-layout';
+import KilangLoginLayout from '@/layouts/kilang-login-layout';
 import AuthLayout from '@/layouts/auth-layout';
 import SettingsLayout from '@/layouts/settings/layout';
 
-const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
+const configuredAppName = import.meta.env.VITE_APP_NAME;
+const appName =
+    !configuredAppName || configuredAppName === 'Laravel'
+        ? 'BioJelan'
+        : configuredAppName;
 
 void createInertiaApp({
     title: (title) => (title ? `${title} - ${appName}` : appName),
@@ -14,6 +20,10 @@ void createInertiaApp({
         switch (true) {
             case name === 'welcome':
                 return null;
+            case name.startsWith('kilang/'):
+                return KilangLayout;
+            case name === 'auth/login':
+                return KilangLoginLayout;
             case name.startsWith('auth/'):
                 return AuthLayout;
             case name.startsWith('settings/'):

@@ -10,6 +10,7 @@ use App\Models\Agen;
 use App\Models\Price;
 use App\Models\TransactionAgent;
 use App\Models\User;
+use App\PickupStatus;
 use App\PriceType;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -37,7 +38,7 @@ class DriverAgentTransactionController extends Controller
             ->where(function ($query): void {
                 $query->whereNull('end_date')->orWhereDate('end_date', '>=', today());
             })
-            ->latest('start_date')
+            ->latest('start_date')->latest('price_id')
             ->first();
 
         if ($price === null) {
@@ -105,6 +106,10 @@ class DriverAgentTransactionController extends Controller
             abort_if($transaction === null, 404);
 
             if (! in_array($transaction->status, [ClientTransactionStatus::Pending, ClientTransactionStatus::Accepted], true)) {
+                return null;
+            }
+
+            if ($transaction->pickup?->status === PickupStatus::Completed) {
                 return null;
             }
 

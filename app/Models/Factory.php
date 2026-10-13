@@ -16,11 +16,12 @@ use Illuminate\Support\Carbon;
  * @property string $address
  * @property float $latitude
  * @property float $longitude
+ * @property string $minimum_pickup_liter
  * @property Carbon|null $created_at
  * @property Carbon|null $updated_at
  * @property-read Collection<int, Admin> $admins
  */
-#[Fillable(['factory_name', 'address', 'latitude', 'longitude'])]
+#[Fillable(['factory_name', 'address', 'latitude', 'longitude', 'minimum_pickup_liter'])]
 class Factory extends Model
 {
     /** @use HasFactory<FactoryFactory> */
@@ -42,6 +43,7 @@ class Factory extends Model
         return [
             'latitude' => 'float',
             'longitude' => 'float',
+            'minimum_pickup_liter' => 'decimal:3',
         ];
     }
 }

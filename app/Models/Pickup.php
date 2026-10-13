@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\PickupStatus;
+use Carbon\CarbonImmutable;
 use Database\Factories\PickupFactory;
 use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -15,6 +16,10 @@ use Illuminate\Support\Carbon;
  * @property int $transaction_agent_id
  * @property int $driver_id
  * @property int $agent_id
+ * @property int|null $factory_id
+ * @property string|null $route_key
+ * @property int $stop_order
+ * @property Carbon|CarbonImmutable|null $completed_at
  * @property Carbon $date
  * @property string $time
  * @property PickupStatus $status
@@ -25,7 +30,7 @@ use Illuminate\Support\Carbon;
  * @property-read User $agent
  * @property-read TransactionAgent $transactionAgent
  */
-#[Fillable(['transaction_agent_id', 'driver_id', 'agent_id', 'date', 'time', 'status', 'destination'])]
+#[Fillable(['transaction_agent_id', 'driver_id', 'agent_id', 'date', 'time', 'status', 'destination', 'factory_id', 'route_key', 'stop_order', 'completed_at'])]
 class Pickup extends Model
 {
     /** @use HasFactory<PickupFactory> */
@@ -57,6 +62,7 @@ class Pickup extends Model
         return [
             'date' => 'date',
             'status' => PickupStatus::class,
+            'completed_at' => 'datetime',
         ];
     }
 }

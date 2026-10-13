@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Database\Factories\AdminFactory;
+use Illuminate\Database\Eloquent\Attributes\Fillable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -17,6 +18,7 @@ use Illuminate\Validation\ValidationException;
  * @property-read User $user
  * @property-read Factory $factory
  */
+#[Fillable(['factory_id'])]
 class Admin extends Model
 {
     /** @use HasFactory<AdminFactory> */
@@ -31,9 +33,9 @@ class Admin extends Model
     protected static function booted(): void
     {
         static::saving(function (Admin $admin): void {
-            if (! $admin->user()->where('role_id', User::ADMIN_ROLE_ID)->exists()) {
+            if (! $admin->user()->whereIn('role_id', User::KILANG_ROLE_IDS)->exists()) {
                 throw ValidationException::withMessages([
-                    'admin_id' => 'Profil admin hanya dapat dimiliki pengguna dengan role admin.',
+                    'admin_id' => 'Keanggotaan Factory hanya untuk akun Kilang.',
                 ]);
             }
         });
