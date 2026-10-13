@@ -141,3 +141,41 @@
         @apply bg-background text-foreground;
     }
 }
+
+.kilang-shell {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --color-card: var(--card);
+    --color-card-foreground: var(--card-foreground);
+    --color-muted: var(--muted);
+    --color-muted-foreground: var(--muted-foreground);
+    --color-border: var(--border);
+    --color-input: var(--input);
+    --color-primary: var(--primary);
+    --color-primary-foreground: var(--primary-foreground);
+    --color-ring: var(--ring);
+    --background: #f4f7ef;
+    --foreground: #16261f;
+    --card: #ffffff;
+    --card-foreground: #16261f;
+    --muted: #eef2e8;
+    --muted-foreground: #6e7c71;
+    --border: #dce3d5;
+    --input: #dce3d5;
+    --primary: #1f4d3a;
+    --primary-foreground: #f7f9f3;
+    --ring: #1f4d3a;
+}
+.dark .kilang-shell {
+    --background: #10251d;
+    --foreground: #eaf3ec;
+    --card: #173328;
+    --card-foreground: #eaf3ec;
+    --muted: #213e31;
+    --muted-foreground: #9bb0a3;
+    --border: #345344;
+    --input: #345344;
+    --primary: #a7d9b5;
+    --primary-foreground: #143329;
+    --ring: #a7d9b5;
+}

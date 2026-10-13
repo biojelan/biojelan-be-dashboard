@@ -6,8 +6,10 @@ use App\ClientTransactionStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\DriverAgentTransactionResource;
 use App\Models\Agen;
+use App\Models\Pickup;
 use App\Models\TransactionAgent;
 use App\Models\User;
+use App\PickupStatus;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -109,6 +111,11 @@ class AgentDriverTransactionController extends Controller
                 return null;
             }
 
+            $pickup = Pickup::query()->where('transaction_agent_id', $transaction->id)->lockForUpdate()->first();
+            if ($pickup?->status === PickupStatus::Completed) {
+                return null;
+            }
+
             if ($restoreStock) {
                 $agentProfile = Agen::query()->lockForUpdate()->find($agent->id);
                 abort_if($agentProfile === null, 404);
@@ -119,6 +126,10 @@ class AgentDriverTransactionController extends Controller
 
             $transaction->status = $to;
             $transaction->save();
+
+            if ($restoreStock && $pickup !== null) {
+                $pickup->update(['status' => PickupStatus::Cancelled]);
+            }
 
             return $transaction;
         });

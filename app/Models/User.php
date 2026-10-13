@@ -46,6 +46,12 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
 
     public const int ADMIN_ROLE_ID = 2;
 
+    public const int MANAGER_FINANCE_ROLE_ID = 3;
+
+    public const int MANAGER_OPERATIONAL_ROLE_ID = 4;
+
+    public const array KILANG_ROLE_IDS = [1, 2, 3, 4];
+
     public const int DRIVER_ROLE_ID = 5;
 
     public const int AGEN_ROLE_ID = 6;
@@ -70,7 +76,7 @@ class User extends Authenticatable implements MustVerifyEmail, PasskeyUser
                 ]);
             }
 
-            if ($user->isDirty('role_id') && $user->role_id !== self::ADMIN_ROLE_ID && $user->admin()->exists()) {
+            if ($user->isDirty('role_id') && ! in_array($user->role_id, self::KILANG_ROLE_IDS, true) && $user->admin()->exists()) {
                 throw ValidationException::withMessages([
                     'role_id' => 'Hapus profil admin sebelum mengubah role pengguna.',
                 ]);

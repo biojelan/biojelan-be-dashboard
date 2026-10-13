@@ -36,7 +36,7 @@ class AgentClientTransactionController extends Controller
             ->where(function ($query): void {
                 $query->whereNull('end_date')->orWhereDate('end_date', '>=', today());
             })
-            ->latest('start_date')
+            ->latest('start_date')->latest('price_id')
             ->first();
 
         if ($price === null) {

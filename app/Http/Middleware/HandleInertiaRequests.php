@@ -42,6 +42,18 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'kilang' => fn (): array => [
+                'factory' => $request->user()?->admin?->factory,
+                'permissions' => [
+                    'users' => $request->user()?->can('kilang-users') ?? false,
+                    'operations' => $request->user()?->can('kilang-operations') ?? false,
+                    'finance' => $request->user()?->can('kilang-finance') ?? false,
+                ],
+            ],
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error' => fn () => $request->session()->get('error'),
+            ],
         ];
     }
 }

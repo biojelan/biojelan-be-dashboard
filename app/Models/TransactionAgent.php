@@ -13,7 +13,7 @@ use Illuminate\Support\Carbon;
 
 /**
  * @property int $id
- * @property string $transaction_id
+ * @property string|null $transaction_id
  * @property int $price_id
  * @property int $agent_id
  * @property int $driver_id

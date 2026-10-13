@@ -25,6 +25,9 @@ class UserSeeder extends Seeder
         ];
 
         foreach ($roles as $roleId => $role) {
+            if ($roleId === User::SUPERADMIN_ROLE_ID && User::query()->where('role_id', User::SUPERADMIN_ROLE_ID)->exists()) {
+                continue;
+            }
             $email = $role.'@mail.com';
             $user = User::query()->where('email', $email)->first();
 

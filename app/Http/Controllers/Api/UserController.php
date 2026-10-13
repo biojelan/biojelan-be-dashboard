@@ -58,6 +58,10 @@ class UserController extends Controller
         /** @var User $user */
         $user = $request->user();
 
+        if ($user->role_id === User::SUPERADMIN_ROLE_ID) {
+            return response()->json(['data' => (object) [], 'message' => 'Failed delete user! Superadmin cannot be deleted.'], 403);
+        }
+
         DB::transaction(function () use ($user): void {
             $user->tokens()->delete();
             $user->delete();
